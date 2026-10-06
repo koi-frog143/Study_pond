@@ -113,11 +113,28 @@ textarea.answer-input{min-height:130px;resize:vertical}.answer-input::placeholde
 .feedback{margin-top:16px;padding:15px;border:1px solid var(--line);background:#eff8ea;border-radius:10px;line-height:1.5}
 .feedback.good{border-left:5px solid #3d8d4b}.feedback.bad{border-left:5px solid var(--red)}
 .term-card,.essay-card{background:rgba(255,255,255,.65);border:1px solid #aac5aa;padding:24px;border-radius:14px}
+.answer-actions{gap:14px;margin-top:18px}
+.term-card .answer-actions{margin-top:22px}
+.practice-actions{gap:16px;margin-top:22px}
 .term-definition{font-size:clamp(1.25rem,2.4vw,2rem);line-height:1.3;font-weight:850;letter-spacing:-.025em}
 .reveal{display:none;margin-top:16px;padding:16px;background:#e9f6e2;border-left:5px solid var(--green);border-radius:0 10px 10px 0;line-height:1.55}
 .reveal.show{display:block}
 .module-pills{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 20px}
 .pill{padding:7px 10px;font-size:.76rem;background:#fafff6}
+.subject-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:8px}
+.subject-card{border:1.5px solid var(--green);background:linear-gradient(145deg,#fbfff8,#edf8e8);padding:24px;border-radius:18px;box-shadow:5px 5px 0 rgba(21,53,30,.16);display:grid;gap:14px}
+.subject-card.available{cursor:pointer;transition:.16s ease}.subject-card.available:hover{transform:translateY(-2px);box-shadow:7px 7px 0 rgba(21,53,30,.2)}
+.subject-card.coming{border-style:dashed;box-shadow:none;opacity:.78}
+.subject-icon{font-size:2.5rem}.subject-card h3{margin:0;font-size:clamp(1.45rem,3vw,2.35rem);letter-spacing:-.045em}.subject-card p{margin:0;color:var(--muted);line-height:1.55}
+.subject-stats{display:flex;gap:8px;flex-wrap:wrap}.subject-card .action-btn{justify-self:start}
+.exam-type-picker{display:grid;gap:10px;min-width:min(100%,560px)}
+.exam-type-label{font-size:.64rem;text-transform:uppercase;font-weight:850;letter-spacing:.08em}
+.exam-type-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.exam-type-btn{border:1.5px solid var(--green);background:var(--paper);padding:11px 14px;border-radius:10px;font-weight:850;cursor:pointer;transition:.15s ease}
+.exam-type-btn:hover{transform:translateY(-1px)}.exam-type-btn.active{background:var(--green);color:#fff;box-shadow:3px 3px 0 var(--shadow)}
+.exam-type-btn.select-all{background:#edf7e8}.exam-type-btn.select-all.active{background:var(--lime);color:var(--ink)}
+.exam-selection-note{font-size:.8rem;color:var(--muted);margin-top:2px}
+.side.subjects-mode .modules-card{display:none}
 .exam-meta{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0 20px}
 .badge{padding:7px 10px;border-radius:999px;background:#e8f4e2;border:1px solid #bdd2b9;font-size:.75rem;font-weight:800}
 .exam-end{text-align:center;padding:36px 10px}.exam-end .big-score{font-size:clamp(3rem,9vw,7rem);font-weight:950;letter-spacing:-.08em;color:var(--green)}
@@ -138,7 +155,8 @@ textarea.answer-input{min-height:130px;resize:vertical}.answer-input::placeholde
   .workspace{gap:14px}.side{grid-template-columns:1fr}.side .modules-card{display:none}
   .main-card{box-shadow:5px 5px 0 var(--shadow);border-radius:14px}.card-inner{padding:20px 15px 28px}
   .section-head{align-items:flex-start}.counter{white-space:normal;text-align:right}
-  .key-grid,.choices{grid-template-columns:1fr}.controls{display:grid}.mode-row{gap:6px}.mode-btn{font-size:.78rem;padding:8px 10px}
+  .key-grid,.choices,.subject-grid{grid-template-columns:1fr}.controls{display:grid;gap:16px}.mode-row{gap:10px}.mode-btn{font-size:.78rem;padding:9px 11px}
+  .exam-type-buttons{display:grid;grid-template-columns:1fr 1fr}.exam-type-btn{width:100%}
   .lesson-nav{display:grid;grid-template-columns:1fr 1fr}.lesson-nav button{width:100%}
   .pond-diagram{grid-template-columns:1fr}.pond-diagram b{grid-column:auto}
 }
@@ -147,20 +165,20 @@ textarea.answer-input{min-height:130px;resize:vertical}.answer-input::placeholde
 <body>
 <div class="shell">
   <header class="topbar">
-    <div class="brand"><div class="brand-mark">🐸</div><div>Study Pond<small>IT317 · Project Management</small></div></div>
-    <div class="source-tag">single subject · source-based reviewer<br>responsive for desktop + phone</div>
+    <div class="brand"><div class="brand-mark">🐸</div><div>Study Pond<small>multi-subject reviewer</small></div></div>
+    <div class="source-tag">subject library · source-based reviewers<br>responsive for desktop + phone</div>
   </header>
 
   <nav class="nav" id="nav"></nav>
 
   <section class="hero">
     <div>
-      <div class="eyebrow">Your new subject</div>
-      <h1>Project<br><em>Management.</em></h1>
+      <div class="eyebrow" id="heroEyebrow">Your study library</div>
+      <h1 id="heroTitle">Study<br><em>Pond.</em></h1>
       <div class="frog-strip">🐸 🌿 🪷 🐸 🌱</div>
     </div>
-    <div class="hero-copy">
-      Learn the uploaded lessons, drill exact terms, solve situational questions, practice essays, then run a mixed exam. Important wording taken directly from the learning materials is highlighted in green.
+    <div class="hero-copy" id="heroCopy">
+      Choose a subject, then learn, recall, apply, explain, and test yourself. Project Management is your first reviewer, with room for more subjects later.
     </div>
   </section>
 
@@ -188,7 +206,7 @@ textarea.answer-input{min-height:130px;resize:vertical}.answer-input::placeholde
 
     <main class="main-card"><div class="card-inner" id="app"></div></main>
   </div>
-  <div class="footer">Project Management Study Pond · built from the uploaded IT317 learning materials</div>
+  <div class="footer">Study Pond · Project Management reviewer built from the uploaded IT317 learning materials</div>
 </div>
 
 <script>
@@ -202,13 +220,14 @@ const norm = s => String(s||"").toLowerCase().replace(/[–—]/g,"-").replace(/
 const same = (guess,answers) => answers.some(a=>norm(guess)===norm(a));
 
 const saved = JSON.parse(localStorage.getItem("pmStudyPondState")||"{}");
+const migrated = saved.schemaVersion===2;
 const state = {
-  view:saved.view||"learn", module:saved.module||"all", lessonIndex:0,
+  view:migrated?(saved.view||"subjects"):"subjects", module:saved.module||"all", lessonIndex:0,
   reviewed:saved.reviewed||0, correct:saved.correct||0,
   termDirection:"def-term", termMode:"type", current:null, answered:false,
-  examType:"mcq", examCount:20, examQuestions:[], examIndex:0, examCorrect:0, examAnswered:false
+  examTypes:["mcq"], examCount:20, examQuestions:[], examIndex:0, examCorrect:0, examAnswered:false
 };
-function persist(){localStorage.setItem("pmStudyPondState",JSON.stringify({view:state.view,module:state.module,reviewed:state.reviewed,correct:state.correct}));}
+function persist(){localStorage.setItem("pmStudyPondState",JSON.stringify({schemaVersion:2,view:state.view,module:state.module,reviewed:state.reviewed,correct:state.correct}));}
 function moduleOkay(m){return state.module==="all"||m===state.module;}
 function sectionHead(kicker,title,count){return `<div class="section-head"><div><div class="micro">${kicker}</div><h2>${title}</h2></div><div class="counter">${count}</div></div>`;}
 function modulePills(){
@@ -226,15 +245,50 @@ function updateStats(bank){
   $("#progressText").textContent=state.reviewed?`Accuracy so far: ${p}%. Reviewed ${state.reviewed} practice items.`:"Start anywhere. Your reviewed items are saved on this device.";
   persist();
 }
+function renderHero(){
+  const subjects=state.view==="subjects";
+  $("#heroEyebrow").textContent=subjects?"Your study library":"Current subject · IT317";
+  $("#heroTitle").innerHTML=subjects?'Study<br><em>Pond.</em>':'Project<br><em>Management.</em>';
+  $("#heroCopy").textContent=subjects
+    ?"Choose a subject, then learn, recall, apply, explain, and test yourself. Project Management is your first reviewer, with room for more subjects later."
+    :"Learn the uploaded lessons, drill exact terms, solve situational questions, practice essays, then build an exam using one or several question types.";
+}
 function renderNav(){
-  const items=[["learn","Learn"],["terms","Terms"],["situational","Situational"],["essay","Essay"],["exam","Exam"]];
+  const items=[["subjects","Subjects"],["learn","Learn"],["terms","Terms"],["situational","Situational"],["essay","Essay"],["exam","Exam"]];
   $("#nav").innerHTML=items.map(([k,v])=>`<button class="nav-btn ${state.view===k?"active":""}" data-view="${k}">${v}</button>`).join("");
-  $$("[data-view]").forEach(b=>b.onclick=()=>{state.view=b.dataset.view;state.current=null;state.answered=false;state.examQuestions=[];render();});
+  $$('[data-view]').forEach(b=>b.onclick=()=>{state.view=b.dataset.view;state.current=null;state.answered=false;state.examQuestions=[];render();});
 }
 function renderModuleList(){
   $("#moduleList").innerHTML=`<button class="module-btn ${state.module==="all"?"active":""}" data-side-module="all">All uploaded lessons</button>`+
     modules.map(m=>`<button class="module-btn ${state.module===m?"active":""}" data-side-module="${m}"><b>${m}</b> · ${DATA.moduleLabels[m]}</button>`).join("");
   $$("[data-side-module]").forEach(b=>b.onclick=()=>{state.module=b.dataset.sideModule;state.lessonIndex=0;state.current=null;state.examQuestions=[];render();});
+}
+
+function renderSubjects(){
+  const banks=examBanks();
+  $("#app").innerHTML=sectionHead("Subject library","Subjects","1 reviewer ready")+`
+    <div class="subject-grid">
+      <article class="subject-card available" id="openPMSubject" tabindex="0" role="button" aria-label="Open Project Management reviewer">
+        <div class="subject-icon">🐸📗</div>
+        <div><div class="micro">IT317 · Reviewer ready</div><h3>Project Management</h3></div>
+        <p>Source-based reviewer covering the uploaded lessons, terminology, situational practice, essays, and customizable exams.</p>
+        <div class="subject-stats">
+          <span class="badge">${DATA.lessons.length} lessons</span><span class="badge">${DATA.terms.length} terms</span><span class="badge">${DATA.situations.length} scenarios</span><span class="badge">${banks.all.length} exam items</span>
+        </div>
+        <button class="action-btn primary" id="openPMButton">Open reviewer →</button>
+      </article>
+      <article class="subject-card coming">
+        <div class="subject-icon">🌱</div>
+        <div><div class="micro">Expandable library</div><h3>More subjects can grow here</h3></div>
+        <p>When you add another reviewer, it can appear as its own subject card while keeping the same Study Pond layout and mobile-friendly navigation.</p>
+        <div class="subject-stats"><span class="badge">Future reviewer slot</span></div>
+      </article>
+    </div>`;
+  const open=()=>{state.view="learn";state.module="all";state.lessonIndex=0;render();};
+  $("#openPMSubject").onclick=open;
+  $("#openPMSubject").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}};
+  $("#openPMButton").onclick=e=>{e.stopPropagation();open();};
+  updateStats(DATA.lessons.length);
 }
 
 function filteredLessons(){return DATA.lessons.filter(x=>moduleOkay(x.module));}
@@ -273,7 +327,7 @@ function renderTerms(){
   if(state.termMode==="type" && state.termDirection==="def-term"){
     body=`<div class="term-card"><div class="quiz-prompt">${prompt}</div><div class="term-definition">${esc(display)}</div>
       <input id="termInput" class="answer-input" placeholder="Type the exact term or accepted abbreviation…" autocomplete="off">
-      <div class="answer-actions"><button class="action-btn primary" id="checkTerm">Check answer</button><button class="action-btn" id="showTerm">Show answer</button></div><div id="feedback"></div></div>`;
+      <div class="answer-actions practice-actions"><button class="action-btn primary" id="checkTerm">Check answer</button><button class="action-btn" id="showTerm">Show answer</button></div><div id="feedback"></div></div>`;
   }else{
     const opts=termOptions(x,state.termDirection);
     body=`<div class="term-card"><div class="quiz-prompt">${prompt}</div><div class="term-definition">${esc(display)}</div>
@@ -314,7 +368,7 @@ function renderSituational(){
   <div class="quiz-prompt">Module ${x.module} · Guess the concept / answer</div>
   <h3 class="question-title">${esc(x.prompt)}</h3>
   <input id="sitInput" class="answer-input" placeholder="Type your best answer…" autocomplete="off">
-  <div class="answer-actions"><button class="action-btn primary" id="checkSit">Check</button><button class="action-btn" id="showSit">Reveal answer</button></div>
+  <div class="answer-actions practice-actions"><button class="action-btn primary" id="checkSit">Check</button><button class="action-btn" id="showSit">Reveal answer</button></div>
   <div id="feedback"></div>`;
   wirePills();
   $("#checkSit").onclick=()=>gradeSituation(false);$("#showSit").onclick=()=>gradeSituation(true);
@@ -370,24 +424,62 @@ function examBanks(){
   const essay=DATA.essays.filter(x=>moduleOkay(x.module)).map(x=>({kind:"essay",module:x.module,q:x.q,a:x.a}));
   return {mcq,tf,essay,all:[...mcq,...tf,...essay]};
 }
+function selectedExamBanks(banks){
+  return state.examTypes.filter(t=>["mcq","tf","essay"].includes(t)).map(t=>({type:t,items:banks[t]}));
+}
+function examTypeName(t){return t==="mcq"?"Multiple Choice":t==="tf"?"True / False":"Essay";}
 function startExam(){
-  const banks=examBanks();let pool=banks[state.examType==="mixed"?"all":state.examType];
-  const n=state.examCount==="all"?pool.length:Math.min(+state.examCount,pool.length);
-  state.examQuestions=shuffle(pool).slice(0,n);state.examIndex=0;state.examCorrect=0;state.examAnswered=false;render();
+  const banks=examBanks();const chosen=selectedExamBanks(banks);
+  if(!chosen.length)return;
+  const total=chosen.reduce((n,b)=>n+b.items.length,0);
+  let questions=[];
+  if(state.examCount==="all"){
+    questions=shuffle(chosen.flatMap(b=>b.items));
+  }else{
+    const target=Math.min(+state.examCount,total);
+    const queues=chosen.map(b=>shuffle(b.items));
+    let turn=0;
+    while(questions.length<target && queues.some(q=>q.length)){
+      const q=queues[turn%queues.length];
+      if(q.length)questions.push(q.pop());
+      turn++;
+    }
+    questions=shuffle(questions);
+  }
+  state.examQuestions=questions;state.examIndex=0;state.examCorrect=0;state.examAnswered=false;render();
 }
 function renderExam(){
   const banks=examBanks();const total=banks.all.length;
   if(!state.examQuestions.length){
+    const allSelected=state.examTypes.length===3;
+    const selectedTotal=state.examTypes.reduce((sum,t)=>sum+(banks[t]?.length||0),0);
+    const typeButtons=[
+      ["mcq","Multiple Choice",banks.mcq.length],
+      ["tf","True / False",banks.tf.length],
+      ["essay","Essay",banks.essay.length]
+    ].map(([k,label,count])=>`<button class="exam-type-btn ${state.examTypes.includes(k)?"active":""}" data-exam-type="${k}" aria-pressed="${state.examTypes.includes(k)}">${label} <span>(${count})</span></button>`).join("");
     $("#app").innerHTML=sectionHead("Build your test","Exam",`${total} questions available`)+modulePills()+`
       <div class="controls">
-        <div class="select-wrap"><label>Exam type</label><select id="examType"><option value="mcq" ${state.examType==="mcq"?"selected":""}>Multiple Choice</option><option value="tf" ${state.examType==="tf"?"selected":""}>True / False</option><option value="essay" ${state.examType==="essay"?"selected":""}>Essay</option><option value="mixed" ${state.examType==="mixed"?"selected":""}>Mixed</option></select></div>
-        <div class="select-wrap"><label>Questions</label><select id="examCount"><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option><option value="all">All available</option></select></div>
+        <div class="exam-type-picker">
+          <div class="exam-type-label">Choose one or more exam types</div>
+          <div class="exam-type-buttons">
+            ${typeButtons}
+            <button class="exam-type-btn select-all ${allSelected?"active":""}" id="selectAllExamTypes" aria-pressed="${allSelected}">Select All</button>
+          </div>
+          <div class="exam-selection-note">${state.examTypes.length?`${state.examTypes.map(examTypeName).join(" + ")} selected · ${selectedTotal} matching questions available`:`Select at least one exam type to begin.`}</div>
+        </div>
+        <div class="select-wrap"><label>Questions</label><select id="examCount"><option value="10" ${String(state.examCount)==="10"?"selected":""}>10</option><option value="20" ${String(state.examCount)==="20"?"selected":""}>20</option><option value="50" ${String(state.examCount)==="50"?"selected":""}>50</option><option value="all" ${state.examCount==="all"?"selected":""}>All available</option></select></div>
       </div>
       <div class="term-card"><h3 class="question-title">Ready to hop in?</h3>
-      <p class="lesson-copy">The exam bank combines <b>${banks.mcq.length} multiple-choice</b>, <b>${banks.tf.length} true/false</b>, and <b>${banks.essay.length} essay</b> questions for this filter. Definition questions are generated from the term bank, while extra questions test formulas, ranges, sequences, examples, and smaller details that are easy to miss.</p>
-      <button class="action-btn primary" id="startExam">Start exam 🐸</button></div>`;
+      <p class="lesson-copy">Choose any combination of <b>Multiple Choice</b>, <b>True / False</b>, and <b>Essay</b>. For fixed-length tests, the site balances the selected types so each chosen format appears whenever enough questions are available.</p>
+      <button class="action-btn primary" id="startExam" ${state.examTypes.length?"":"disabled"}>Start exam 🐸</button></div>`;
     wirePills();
-    $("#examType").onchange=e=>state.examType=e.target.value;
+    $$('[data-exam-type]').forEach(b=>b.onclick=()=>{
+      const t=b.dataset.examType;
+      state.examTypes=state.examTypes.includes(t)?state.examTypes.filter(x=>x!==t):[...state.examTypes,t];
+      render();
+    });
+    $("#selectAllExamTypes").onclick=()=>{state.examTypes=["mcq","tf","essay"];render();};
     $("#examCount").onchange=e=>state.examCount=e.target.value;
     $("#startExam").onclick=startExam;updateStats(total);return;
   }
@@ -407,10 +499,11 @@ function renderExam(){
   } else {
     body=`<div class="quiz-prompt">Essay · Module ${x.module}</div><h3 class="question-title">${esc(x.q)}</h3><textarea class="answer-input" placeholder="Write your answer before revealing the model answer."></textarea><div class="answer-actions"><button class="action-btn primary" id="examReveal">Reveal model answer</button></div><div class="reveal" id="examEssayReveal"><b>Model answer</b><br>${esc(x.a)}<div class="answer-actions" style="margin-top:12px"><button class="action-btn" id="examEssayYes">I got it ✓</button><button class="action-btn" id="examEssayNo">Needs review</button></div></div>`;
   }
-  $("#app").innerHTML=sectionHead("Active exam",`${state.examType==="mixed"?"Mixed":state.examType.toUpperCase()} Test`,`Q ${state.examIndex+1} / ${state.examQuestions.length}`)+`
+  const activeLabel=state.examTypes.length===3?"All Types":state.examTypes.map(examTypeName).join(" + ");
+  $("#app").innerHTML=sectionHead("Active exam",`${activeLabel} Test`,`Q ${state.examIndex+1} / ${state.examQuestions.length}`)+`
     <div class="exam-meta"><span class="badge">Score ${state.examCorrect}</span><span class="badge">Module ${x.module}</span><span class="badge">${DATA.moduleLabels[x.module]||""}</span></div>${body}`;
-  $$("[data-exam-choice]").forEach(b=>b.onclick=()=>gradeExamMCQ(b,x));
-  $$("[data-tf]").forEach(b=>b.onclick=()=>gradeExamTF(b,x));
+  $$('[data-exam-choice]').forEach(b=>b.onclick=()=>gradeExamMCQ(b,x));
+  $$('[data-tf]').forEach(b=>b.onclick=()=>gradeExamTF(b,x));
   if($("#examReveal"))$("#examReveal").onclick=()=>{if(state.examAnswered)return;state.examAnswered=true;$("#examEssayReveal").classList.add("show");setTimeout(()=>{ $("#examEssayYes").onclick=()=>finishExamQuestion(true);$("#examEssayNo").onclick=()=>finishExamQuestion(false);},0);};
   updateStats(total);
 }
@@ -432,8 +525,10 @@ function gradeExamTF(btn,x){
 function finishExamQuestion(ok){if(ok)state.examCorrect++;state.examIndex++;state.examAnswered=false;render();}
 
 function render(){
-  renderNav();renderModuleList();
-  if(state.view==="learn")renderLearn();
+  renderHero();renderNav();renderModuleList();
+  $(".side").classList.toggle("subjects-mode",state.view==="subjects");
+  if(state.view==="subjects")renderSubjects();
+  else if(state.view==="learn")renderLearn();
   else if(state.view==="terms")renderTerms();
   else if(state.view==="situational")renderSituational();
   else if(state.view==="essay")renderEssay();
